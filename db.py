@@ -13,7 +13,7 @@ class User(db.Model):
     username = db.Column(db.String(80), unique=True)
     email = db.Column(db.String(120), unique=True)
     password = db.Column(db.String(64))
-    is_admin = db.Column(db.Boolean())
+    #is_admin = db.Column(db.Boolean())
     sessionhash = db.Column(db.String(64), unique=True)
 
     def __init__(self, username, email, password, is_admin=False):
@@ -21,7 +21,7 @@ class User(db.Model):
         self.email = email
         self.password = md5(password).hexdigest()
         self.sessionhash = md5(username+self.password+email).hexdigest()
-        self.is_admin = is_admin
+        #self.is_admin = is_admin
 
     def __repr__(self):
         return '<User %r>' % self.username
