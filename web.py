@@ -1,4 +1,4 @@
-from flask import Flask,redirect
+from flask import Flask,redirect,render_template,request
 import db
 import dynamics
 
@@ -55,7 +55,7 @@ def privroot():
     return render_template("priv/index.html")
 
 @app.route('/priv/<path:patha>')
-def privroot(patha):
+def send_priv(patha):
   usr=db.User.query.filter_by(sessionhash=request.cookies.get('soda'))
   if usr.count() < 1:
     return redirect('/pub')
@@ -66,3 +66,6 @@ def privroot(patha):
     return render_template("priv/"+path, **dynamics.priv_sources[dyn]())
   else:
     return render_template("priv/"+path)
+
+if __name__ == '__main__':
+    app.run()

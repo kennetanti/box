@@ -38,7 +38,7 @@ class LoginAttempts(db.Model):
     success = db.Column(db.Boolean())
     time_at = db.Column(db.DateTime())
     ip = db.Column(db.String(256))
-    user_agent = db.Column(db.String(
+    user_agent = db.Column(db.String(256))
     user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     user = db.relationship('User', backref=db.backref('login_attempts', lazy='dynamic'))
     def __init__(self, user, success, ip, user_agent):
