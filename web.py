@@ -7,6 +7,7 @@ app = Flask(__name__)
 PUB_DYNAMICS_AVAILABLE = dynamics.pub_sources.keys()
 PRIV_DYNAMICS_AVAILABLE = dynamics.priv_sources.keys()
 
+@app.route('/')
 @app.route('/pub')
 def root():
   if "index" in PUB_DYNAMICS_AVAILABLE:
