@@ -33,7 +33,7 @@ def login():
 @app.route('/do_login', methods=['POST'])
 def do_login():
   usrr = db.User.query.filter_by(username=request.form.get('username'))
-  if usrr.count <1:
+  if usrr.count() <1:
     return redirect('/login?error=fail')
   usr=usrr.first()
   k=usr.login(request.form.get('password'), request.environ['REMOTE_ADDR'], request.headers.get('User-Agent'))
