@@ -23,9 +23,10 @@ class User(db.Model):
     def __repr__(self):
         return '<User %r>' % self.username
 
-    def login(self, password):
+    def login(self, password, ip, user_agent):
         phash = md5(password).hexdigest()
-        la = LoginAttempts(self, self.password==phash)
+        authenticated = self.password == phash
+        la = LoginAttempts(self, authenticated, ip, user_agent)
         db.session.add(la)
         db.session.commit()
         if self.password == phash:
@@ -35,8 +36,14 @@ class User(db.Model):
 class LoginAttempts(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     success = db.Column(db.Boolean())
-    user_id = db.Column(db.Integer(), db.ForeignKey(user.id))
+    time_at = db.Column(db.DateTime())
+    ip = db.Column(db.String(256))
+    user_agent = db.Column(db.String(
+    user_id = db.Column(db.Integer(), db.ForeignKey('user.id'))
     user = db.relationship('User', backref=db.backref('login_attempts', lazy='dynamic'))
-    def __init__(self, user, success):
+    def __init__(self, user, success, ip, user_agent):
         self.success = success
         self.user = user
+        self.ip = ip
+        self.user_agent = user_agent
+        self.time_at = datetime.utcnow()
