@@ -1,4 +1,4 @@
-from flask import Flask,redirect,render_template,request
+from flask import Flask,redirect,render_template,request,send_from_directory
 import db
 import dynamics
 
@@ -8,6 +8,8 @@ PUB_DYNAMICS_AVAILABLE = dynamics.pub_sources.keys()
 PRIV_DYNAMICS_AVAILABLE = dynamics.priv_sources.keys()
 
 @app.route('/')
+def reroot():
+  return redirect('/pub/')
 @app.route('/pub')
 def root():
   if "index" in PUB_DYNAMICS_AVAILABLE:
@@ -21,6 +23,8 @@ def send_pub(patha):
   dyn = path.split('.')[0]
   if dyn in PUB_DYNAMICS_AVAILABLE:
     return render_template("pub/"+path, **dynamics.pub_sources[dyn]())
+  elif dyn.startswith("css") or dyn.startswith("js"):
+    return send_from_directory("templates/pub/", path)
   else:
     return render_template("pub/"+path)
 
@@ -35,11 +39,11 @@ def login():
 def do_login():
   usrr = db.User.query.filter_by(username=request.form.get('username'))
   if usrr.count() <1:
-    return redirect('/login?error=fail')
+    return redirect('/pub/login.html?error=fail')
   usr=usrr.first()
   k=usr.login(request.form.get('password'), request.environ['REMOTE_ADDR'], request.headers.get('User-Agent'))
   if k=="logout":
-    return redirect('/login?error=fail')
+    return redirect('/pub/login.html?error=fail')
   resp = redirect('/priv')
   resp.set_cookie('soda', k)
   return resp
@@ -65,6 +69,8 @@ def send_priv(patha):
   dyn = path.split('.')[0]
   if dyn in PRIV_DYNAMICS_AVAILABLE:
     return render_template("priv/"+path, **dynamics.priv_sources[dyn]())
+  elif dyn.startswith("css") or dyn.startswith("js"):
+    return send_from_directory("templates/priv/", path)
   else:
     return render_template("priv/"+path)
 
