@@ -1,6 +1,8 @@
 from flask import request
+import builtin_dynamics
 
 def index():
-  return {"slogan": request.args.get("slogan")}
+  return {}
 pub_sources = {	"index": index}
-priv_sources = {	"index": index}
+priv_sources = {	"index": index,
+			"create_account": builtin_dynamics.create_account}
