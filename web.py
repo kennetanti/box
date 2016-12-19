@@ -1,4 +1,4 @@
-from flask import Flask,redirect,render_template,request,send_from_directory
+from flask import Flask,redirect,render_template,request,send_from_directory, jsonify
 import db
 import dynamics
 
@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 PUB_DYNAMICS_AVAILABLE = dynamics.pub_sources.keys()
 PRIV_DYNAMICS_AVAILABLE = dynamics.priv_sources.keys()
+API_DYNAMICS_AVAILABLE = dynamics.api_sources.keys()
 
 @app.route('/')
 def reroot():
@@ -27,6 +28,15 @@ def send_pub(patha):
     return send_from_directory("templates/pub/", path)
   else:
     return render_template("pub/"+path)
+
+@app.route('/api/<path:patha>', methods=["GET", "POST"])
+def send_api(patha):
+  path = patha.replace("..", ".")
+  dyn = path.split('.')[0]
+  if dyn in API_DYNAMICS_AVAILABLE:
+    return jsonify(**dynamics.api_sources[dyn]())
+  else:
+    return jsonify({"error": "endpoint not found"})
 
 @app.route('/login')
 def login():
@@ -55,7 +65,7 @@ def privroot():
     return redirect('/pub')
   userobj = usr.first()
   if "index" in PRIV_DYNAMICS_AVAILABLE:
-    return render_template("priv/index.html", **dynamics.priv_sources["index"]())
+    return render_template("priv/index.html", **dynamics.priv_sources["index"](userobj))
   else:
     return render_template("priv/index.html")
 
@@ -68,7 +78,7 @@ def send_priv(patha):
   path = patha.replace("..", ".")
   dyn = path.split('.')[0]
   if dyn in PRIV_DYNAMICS_AVAILABLE:
-    return render_template("priv/"+path, **dynamics.priv_sources[dyn]())
+    return render_template("priv/"+path, **dynamics.priv_sources[dyn](userobj))
   elif dyn.startswith("css") or dyn.startswith("js"):
     return send_from_directory("templates/priv/", path)
   else:
