@@ -3,8 +3,12 @@ import builtin_dynamics
 
 def index(user=None):
   return {}
+
+def api_test():
+    return {"this_is": "SPARTAAAAA"}
+
 pub_sources = {		"index": index,
 			"create_account": builtin_dynamics.create_account}
 priv_sources = {	"index": index}
 
-api_sources = {		"test": builtin_dynamics.api_test}
+api_sources = {		"test": api_test}
