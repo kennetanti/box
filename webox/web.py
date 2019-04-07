@@ -11,7 +11,7 @@ API_DYNAMICS_AVAILABLE = list(dynamics.api_sources.keys())
 
 @app.route('/')
 def reroot():
-	return redirect('/pub/')
+	return redirect('/pub')
 
 
 @app.route('/pub', methods=["GET", "POST"])
@@ -98,4 +98,4 @@ def send_priv(patha):
 
 
 if __name__ == '__main__':
-	app.run()
+	app.run(host="0.0.0.0", port=5090, debug=True)

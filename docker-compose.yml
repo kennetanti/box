@@ -1,0 +1,36 @@
+version: '2'
+services:
+  db:
+    image: mysql
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    networks:
+      - db_nw
+    environment:
+      MYSQL_ROOT_PASSWORD: winning
+  adminer:
+    image: adminer
+    restart: always
+    networks:
+      - db_nw
+    ports:
+      - 9000:8080
+  webox:
+    build: webox/
+    restart: always
+    networks:
+      - db_nw
+      - web_nw
+  nginx:
+    image: "nginx:1.13.5"
+    ports:
+      - "7748:80"
+    volumes:
+      - ./nginx_conf:/etc/nginx/conf.d
+    networks:
+      - web_nw
+networks:
+  db_nw:
+    driver: bridge
+  web_nw:
+    driver: bridge

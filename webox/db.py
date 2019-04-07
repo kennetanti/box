@@ -2,9 +2,21 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from hashlib import md5
 from datetime import datetime
+import time
+
+from sqlalchemy_utils import create_database, database_exists
+
+
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///tmp/test.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:winning@db/box'
+print("waiting for database..")
+time.sleep(30)
+
+if not database_exists(app.config['SQLALCHEMY_DATABASE_URI']):
+	print("creating db..")
+	create_database(app.config['SQLALCHEMY_DATABASE_URI'])
+print("ready.")
 db = SQLAlchemy(app)
 
 
@@ -54,3 +66,5 @@ class LoginAttempts(db.Model):
 		self.ip = ip
 		self.user_agent = user_agent
 		self.time_at = datetime.utcnow()
+
+db.create_all()
