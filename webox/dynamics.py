@@ -3,11 +3,11 @@ import builtin_dynamics
 
 
 def index(user=None):
-	return {}
+    return {}
 
 
 def api_test():
-	return {"this_is": "SPARTAAAAA"}
+    return {"this_is": "SPARTAAAAA"}
 
 
 pub_sources = {
