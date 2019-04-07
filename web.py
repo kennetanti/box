@@ -4,9 +4,9 @@ import dynamics
 
 app = Flask(__name__)
 
-PUB_DYNAMICS_AVAILABLE = dynamics.pub_sources.keys()
-PRIV_DYNAMICS_AVAILABLE = dynamics.priv_sources.keys()
-API_DYNAMICS_AVAILABLE = dynamics.api_sources.keys()
+PUB_DYNAMICS_AVAILABLE = list(dynamics.pub_sources.keys())
+PRIV_DYNAMICS_AVAILABLE = list(dynamics.priv_sources.keys())
+API_DYNAMICS_AVAILABLE = list(dynamics.api_sources.keys())
 
 
 @app.route('/')
